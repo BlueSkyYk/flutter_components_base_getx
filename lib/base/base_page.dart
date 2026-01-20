@@ -12,11 +12,10 @@ abstract class BasePage<Controller extends BaseController>
     super.key,
     required Controller controller,
     this.tag,
-    bool permanent = false,
     this.disposeDeleteController = false,
     this.forceDeleteController = true,
   }) {
-    Get.put(controller, tag: tag, permanent: permanent);
+    Get.put(controller, tag: tag);
   }
 
   final String? tag;
