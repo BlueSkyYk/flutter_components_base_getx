@@ -1,7 +1,9 @@
 name: flutter_components_base_getx
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: "Some Flutter Common Components."
+version: 1.0.0
+homepage: https://github.com/BlueSkyYk/flutter_components_base_getx
+repository: https://github.com/BlueSkyYk/flutter_components_base_getx.git
+
 
 environment:
   sdk: ^3.10.4
@@ -22,7 +24,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
+#flutter:
 
 # To add assets to your package, add an assets section, like this:
 # assets:
