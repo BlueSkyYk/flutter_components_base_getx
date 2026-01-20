@@ -14,11 +14,31 @@ abstract class BaseController extends GetxController {
 
   bool _firstShowHandled = false;
 
+  TickerProvider? _tickerProvider;
+
+  TickerProvider? get tickerProvider => _tickerProvider;
+
+  final _canPop = true.obs;
+
+  bool get canPop => _canPop.value;
+
   @override
   void onReady() {
     super.onReady();
     _firstShowHandled = true;
     pageShow();
+  }
+
+  void updateCanPop(bool canPop) {
+    _canPop.value = canPop;
+  }
+
+  void setTickerProvider(TickerProvider provider) {
+    _tickerProvider = provider;
+  }
+
+  void removeTickerProvider() {
+    _tickerProvider = null;
   }
 
   void pageInit() {
@@ -47,6 +67,10 @@ abstract class BaseController extends GetxController {
     onPageDispose();
   }
 
+  void popInvokedWithResult(bool didPop, dynamic result) {
+    onPopInvokedWithResult(didPop, result);
+  }
+
   @protected
   void onPageInit() {}
 
@@ -58,4 +82,7 @@ abstract class BaseController extends GetxController {
 
   @protected
   void onPageDispose() {}
+
+  @protected
+  void onPopInvokedWithResult(bool didPop, dynamic result) {}
 }

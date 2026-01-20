@@ -38,7 +38,7 @@ abstract class BasePage<Controller extends BaseController>
 }
 
 class _BasePageState<Controller extends BaseController> extends State<BasePage>
-    with WidgetsBindingObserver, RouteAware {
+    with WidgetsBindingObserver, RouteAware, TickerProviderStateMixin {
   PageRoute? _route;
   bool _isVisible = false;
   bool _isAppInForeground = true;
@@ -55,13 +55,20 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
       _updateVisibility();
     });
     super.initState();
+    widget.controller.setTickerProvider(this);
     widget.initPage();
     widget.controller.pageInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.build(context);
+    return Obx(
+      () => PopScope<dynamic>(
+        canPop: widget.controller.canPop,
+        onPopInvokedWithResult: widget.controller.popInvokedWithResult,
+        child: widget.build(context),
+      ),
+    );
   }
 
   @override
@@ -73,6 +80,7 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
     if (_route != null) {
       appRouteObserver.unsubscribe(this);
     }
+    widget.controller.removeTickerProvider();
     widget.controller.pageDispose();
     if (widget.disposeDeleteController) {
       Get.delete<Controller>(
