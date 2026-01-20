@@ -18,9 +18,7 @@ abstract class BaseController extends GetxController {
 
   TickerProvider? get tickerProvider => _tickerProvider;
 
-  final _canPop = true.obs;
-
-  bool get canPop => _canPop.value;
+  final ValueNotifier<bool> canGesturePop = ValueNotifier<bool>(true);
 
   @override
   void onReady() {
@@ -30,7 +28,7 @@ abstract class BaseController extends GetxController {
   }
 
   void updateCanPop(bool canPop) {
-    _canPop.value = canPop;
+    canGesturePop.value = canPop;
   }
 
   void setTickerProvider(TickerProvider provider) {

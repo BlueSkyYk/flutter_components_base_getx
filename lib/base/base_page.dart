@@ -62,12 +62,15 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => PopScope<dynamic>(
-        canPop: widget.controller.canPop,
-        onPopInvokedWithResult: widget.controller.popInvokedWithResult,
-        child: widget.build(context),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: widget.controller.canGesturePop,
+      builder: (context, value, child) {
+        return PopScope<dynamic>(
+          canPop: value,
+          onPopInvokedWithResult: widget.controller.popInvokedWithResult,
+          child: widget.build(context),
+        );
+      },
     );
   }
 
