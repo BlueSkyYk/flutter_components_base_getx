@@ -8,7 +8,20 @@ import 'base_controller.dart';
 
 abstract class BasePage<Controller extends BaseController>
     extends StatefulWidget {
-  BasePage({super.key});
+  BasePage({
+    super.key,
+    required Controller controller,
+    this.tag,
+    bool permanent = false,
+    this.disposeDeleteController = false,
+    this.forceDeleteController = true,
+  }) {
+    Get.put(controller, tag: tag, permanent: permanent);
+  }
+
+  final String? tag;
+  final bool disposeDeleteController;
+  final bool forceDeleteController;
 
   late final Controller _controller = Get.find<Controller>();
 
@@ -21,10 +34,10 @@ abstract class BasePage<Controller extends BaseController>
   Widget build(BuildContext context);
 
   @override
-  State<BasePage> createState() => _BasePageState();
+  State<BasePage> createState() => _BasePageState<Controller>();
 }
 
-class _BasePageState extends State<BasePage>
+class _BasePageState<Controller extends BaseController> extends State<BasePage>
     with WidgetsBindingObserver, RouteAware {
   PageRoute? _route;
   bool _isVisible = false;
@@ -61,6 +74,12 @@ class _BasePageState extends State<BasePage>
       appRouteObserver.unsubscribe(this);
     }
     widget.controller.pageDispose();
+    if (widget.disposeDeleteController) {
+      Get.delete<Controller>(
+        tag: widget.tag,
+        force: widget.forceDeleteController,
+      );
+    }
     widget.dispose();
     super.dispose();
   }
