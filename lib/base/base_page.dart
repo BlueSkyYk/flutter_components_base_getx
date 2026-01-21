@@ -14,15 +14,15 @@ abstract class BasePage<Controller extends BaseController>
     this.tag,
     this.disposeDeleteController = false,
     this.forceDeleteController = true,
-  }) {
-    Get.put(controller, tag: tag);
-  }
+  }) : _controller = Get.isRegistered<Controller>(tag: tag)
+           ? Get.find<Controller>(tag: tag)
+           : Get.put(controller, tag: tag);
 
   final String? tag;
   final bool disposeDeleteController;
   final bool forceDeleteController;
 
-  late final Controller _controller = Get.find<Controller>();
+  late final Controller _controller;
 
   Controller get controller => _controller;
 
