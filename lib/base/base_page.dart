@@ -69,7 +69,7 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
         return PopScope<dynamic>(
           canPop: value,
           onPopInvokedWithResult: widget.controller.popInvokedWithResult,
-          child: content ?? widget.build(context),
+          child: content ??= widget.build(context),
         );
       },
     );
