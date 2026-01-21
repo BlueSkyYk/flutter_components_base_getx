@@ -6,14 +6,17 @@ abstract class BaseItemController extends BaseController {
   bool get itemShowing => _itemShowing;
 
   void updateItemShowStatus(bool showing) {
+    print(
+      "${runtimeType} - updateItemShowStatus($showing) - itemShowing: $_itemShowing - visible: $isVisible",
+    );
     if (_itemShowing == showing) {
       return;
     }
     _itemShowing = showing;
     if (_itemShowing) {
-      pageShow();
+      super.pageShow();
     } else {
-      pageHide();
+      super.pageHide();
     }
   }
 
