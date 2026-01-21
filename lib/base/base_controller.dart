@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-abstract class BaseController extends GetxController {
+import '../components/listener_mixin.dart';
+
+abstract class BaseController extends GetxController with ListenerMixin {
   bool _isInitialized = false;
   bool _isVisible = false;
   bool _isDisposed = false;
@@ -25,6 +27,17 @@ abstract class BaseController extends GetxController {
     super.onReady();
     _firstShowHandled = true;
     pageShow();
+  }
+
+  @override
+  void onClose() {
+    for (final worker in workers) {
+      try {
+        worker.dispose();
+      } catch (_) {}
+    }
+    workers.clear();
+    super.onClose();
   }
 
   void updateCanPop(bool canPop) {
