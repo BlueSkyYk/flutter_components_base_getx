@@ -47,6 +47,8 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
   bool get isTopPage =>
       _route != null && appRouteObserver.currentTopRoute == _route;
 
+  Widget? content;
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -67,7 +69,7 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
         return PopScope<dynamic>(
           canPop: value,
           onPopInvokedWithResult: widget.controller.popInvokedWithResult,
-          child: widget.build(context),
+          child: content ?? widget.build(context),
         );
       },
     );
