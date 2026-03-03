@@ -1,14 +1,13 @@
-import 'package:flutter_components_base_getx/base/base_controller.dart';
+// Base classes
+export 'base/base_controller.dart';
+export 'base/base_page.dart';
+export 'base/base_service.dart';
+export 'base/base_item_controller.dart';
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+// Components
+export 'components/app_route_observer.dart';
+export 'components/keep_alive_wrapper.dart';
+export 'components/listener_mixin.dart';
 
-class TestController extends BaseController {
-  @override
-  void onInit() {
-    super.onInit();
-  }
-}
+// Global instance
+export 'component.dart';

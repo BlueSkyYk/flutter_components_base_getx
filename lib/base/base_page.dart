@@ -47,15 +47,15 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
   bool get isTopPage =>
       _route != null && appRouteObserver.currentTopRoute == _route;
 
-  Widget? content;
+  Widget? _content;
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
     _visibilitySub = appRouteObserver.visibilityStream.listen((_) {
       _updateVisibility();
     });
-    super.initState();
     widget.controller.setTickerProvider(this);
     widget.initPage();
     widget.controller.pageInit();
@@ -65,11 +65,12 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: widget.controller.canGesturePop,
+      child: _content ??= widget.build(context),
       builder: (context, value, child) {
         return PopScope<dynamic>(
           canPop: value,
           onPopInvokedWithResult: widget.controller.popInvokedWithResult,
-          child: content ??= widget.build(context),
+          child: child!,
         );
       },
     );
@@ -77,30 +78,39 @@ class _BasePageState<Controller extends BaseController> extends State<BasePage>
 
   @override
   void dispose() {
-    _visibilitySub.cancel();
-    _isVisible = false;
-    _updateVisibility();
-    WidgetsBinding.instance.removeObserver(this);
-    if (_route != null) {
-      appRouteObserver.unsubscribe(this);
+    try {
+      _visibilitySub.cancel();
+      _isVisible = false;
+      _updateVisibility();
+    } finally {
+      try {
+        WidgetsBinding.instance.removeObserver(this);
+        if (_route != null) {
+          appRouteObserver.unsubscribe(this);
+        }
+        widget.controller.removeTickerProvider();
+        widget.controller.pageDispose();
+        if (widget.disposeDeleteController) {
+          Get.delete<Controller>(
+            tag: widget.tag,
+            force: widget.forceDeleteController,
+          );
+        }
+        widget.dispose();
+      } finally {
+        super.dispose();
+      }
     }
-    widget.controller.removeTickerProvider();
-    widget.controller.pageDispose();
-    if (widget.disposeDeleteController) {
-      Get.delete<Controller>(
-        tag: widget.tag,
-        force: widget.forceDeleteController,
-      );
-    }
-    widget.dispose();
-    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
-    if (route is PageRoute) {
+    if (route is PageRoute && _route != route) {
+      if (_route != null) {
+        appRouteObserver.unsubscribe(this);
+      }
       _route = route;
       appRouteObserver.subscribe(this, route);
     }

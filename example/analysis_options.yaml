@@ -1,0 +1,9 @@
+# analysis_options for example app
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Allow print in example code (used for demonstrating lifecycle)
+    avoid_print: false
+    # Allow multiple underscores in test files (used for test names)
+    unnecessary_underscores: false

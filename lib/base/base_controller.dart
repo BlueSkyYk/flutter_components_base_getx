@@ -31,6 +31,7 @@ abstract class BaseController extends GetxController with ListenerMixin {
 
   @override
   void onClose() {
+    canGesturePop.dispose();
     for (final worker in workers) {
       try {
         worker.dispose();
