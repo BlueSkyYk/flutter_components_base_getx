@@ -2,6 +2,22 @@
 
 所有重要的更改都会记录在此文件中。
 
+## [1.0.9] - 2026-03-03
+
+### 🐛 Bug 修复
+
+#### 热重载问题修复
+- **base_controller.dart**: 移除 `canGesturePop.dispose()`，避免热重载时出现 "ValueNotifier was used after being disposed" 错误
+  - ValueListenableBuilder 会自动管理监听器的生命周期，无需手动 dispose
+  - 手动 dispose 会导致热重载时 Widget 重建但 ValueNotifier 已被销毁
+  - 保持 ValueNotifier 实例的内存开销极小，不会造成内存泄漏
+
+### 📝 说明
+
+- 使用 ValueListenableBuilder 而非 Obx 是为了避免全局刷新，实现局部更新
+- 只有 PopScope 的 `canPop` 参数会更新，child 内容被缓存不会重建
+- 这种方式在保证性能的同时避免了热重载问题
+
 ## [1.0.8] - 2026-03-03
 
 ### 🐛 Bug 修复

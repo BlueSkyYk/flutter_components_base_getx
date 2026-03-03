@@ -31,7 +31,6 @@ abstract class BaseController extends GetxController with ListenerMixin {
 
   @override
   void onClose() {
-    canGesturePop.dispose();
     for (final worker in workers) {
       try {
         worker.dispose();
@@ -42,7 +41,9 @@ abstract class BaseController extends GetxController with ListenerMixin {
   }
 
   void updateCanPop(bool canPop) {
-    canGesturePop.value = canPop;
+    if (!_isDisposed) {
+      canGesturePop.value = canPop;
+    }
   }
 
   void setTickerProvider(TickerProvider provider) {
